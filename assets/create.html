@@ -1,0 +1,86 @@
+<form method="POST" action="{{ script_root }}/admin/chal/new" enctype="multipart/form-data">
+	<div class="form-group">
+		<div class="alert alert-secondary" role="alert">
+			Integrated challenges call out to an external verification engine to determine if a challenge is solved correctly. 
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="name">Name<br>
+			<small class="form-text text-muted">
+				The name of your challenge
+			</small>
+		</label>
+		<input type="text" class="form-control" name="name" placeholder="Enter challenge name">
+	</div>
+	<div class="form-group">
+		<label for="category">Category<br>
+			<small class="form-text text-muted">
+				The category of your challenge
+			</small>
+		</label>
+		<input type="text" class="form-control" name="category" placeholder="Enter challenge category">
+	</div>
+
+	<ul class="nav nav-tabs" role="tablist" id="new-desc-edit">
+		<li class="nav-item">
+			<a class="nav-link active" href="#new-desc-write" aria-controls="home" role="tab"
+			   data-toggle="tab">Write</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="#new-desc-preview" aria-controls="home" role="tab" data-toggle="tab">Preview</a>
+		</li>
+	</ul>
+
+	<div class="tab-content">
+		<div role="tabpanel" class="tab-pane active" id="new-desc-write">
+			<div class="form-group">
+				<label for="message-text" class="control-label">Message
+					<small class="form-text text-muted">
+						Use this to give a brief introduction to your challenge. The description supports HTML and
+						Markdown.
+					</small>
+				</label>
+				<textarea id="new-desc-editor" class="form-control" name="description" rows="10"></textarea>
+			</div>
+		</div>
+		<div role="tabpanel" class="tab-pane content" id="new-desc-preview" style="height:234px; overflow-y: scroll;">
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="value">Initial Value<br>
+			<small class="form-text text-muted">
+				This is how many points the challenge is worth.
+			</small>
+		</label>
+		<input type="number" class="form-control" name="value" placeholder="Enter value" required>
+
+	</div>
+
+	<div class="form-group">
+		<label for="value">Challenge Name<br>
+			<small class="form-text text-muted">
+				The name/identifier of the challenge to be passed to the validation engine
+			</small>
+		</label>
+		<input type="text" class="form-control" name="challengeName" placeholder="Enter challenge name" required>
+	</div>
+
+	<div class="form-group">
+		<label>
+			State<br>
+			<small class="form-text text-muted">Changes the state of the challenge (e.g. visible, hidden)</small>
+		</label>
+
+		<select class="form-control" name="state">
+			<option value="visible" {% if challenge.state == "visible" %}selected{% endif %}>Visible</option>
+			<option value="hidden" {% if challenge.state == "hidden" %}selected{% endif %}>Hidden</option>
+		</select>
+	</div>
+	<input type="hidden" value="integrated" name="type" id="chaltype">
+
+	<div class="form-group">
+		<button class="btn btn-primary float-right create-challenge-submit" type="submit">Create</button>
+	</div>
+</form>
