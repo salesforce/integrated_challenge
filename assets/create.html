@@ -1,20 +1,17 @@
-<form method="POST" action="{{ script_root }}/admin/chal/new" enctype="multipart/form-data">
+<form method="POST" action="{{ script_root }}/admin/challenges/new" enctype="multipart/form-data">
 	<div class="form-group">
-		<div class="alert alert-secondary" role="alert">
-			Integrated challenges call out to an external verification engine to determine if a challenge is solved correctly. 
-		</div>
-	</div>
-
-	<div class="form-group">
-		<label for="name">Name<br>
+		<label>
+			Name:<br>
 			<small class="form-text text-muted">
 				The name of your challenge
 			</small>
 		</label>
 		<input type="text" class="form-control" name="name" placeholder="Enter challenge name">
 	</div>
+
 	<div class="form-group">
-		<label for="category">Category<br>
+		<label>
+			Category:<br>
 			<small class="form-text text-muted">
 				The category of your challenge
 			</small>
@@ -25,20 +22,20 @@
 	<ul class="nav nav-tabs" role="tablist" id="new-desc-edit">
 		<li class="nav-item">
 			<a class="nav-link active" href="#new-desc-write" aria-controls="home" role="tab"
-			   data-toggle="tab">Write</a>
+			   data-toggle="tab" tabindex="-1">Write</a>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link" href="#new-desc-preview" aria-controls="home" role="tab" data-toggle="tab">Preview</a>
+			<a class="nav-link" href="#new-desc-preview" aria-controls="home" role="tab" data-toggle="tab" tabindex="-1">Preview</a>
 		</li>
 	</ul>
 
 	<div class="tab-content">
 		<div role="tabpanel" class="tab-pane active" id="new-desc-write">
 			<div class="form-group">
-				<label for="message-text" class="control-label">Message
+				<label>
+					Message:<br>
 					<small class="form-text text-muted">
-						Use this to give a brief introduction to your challenge. The description supports HTML and
-						Markdown.
+						Use this to give a brief introduction to your challenge.
 					</small>
 				</label>
 				<textarea id="new-desc-editor" class="form-control" name="description" rows="10"></textarea>
@@ -49,19 +46,19 @@
 	</div>
 
 	<div class="form-group">
-		<label for="value">Initial Value<br>
+		<label>
+			Value:<br>
 			<small class="form-text text-muted">
-				This is how many points the challenge is worth.
+				This is how many points are rewarded for solving this challenge.
 			</small>
 		</label>
 		<input type="number" class="form-control" name="value" placeholder="Enter value" required>
-
 	</div>
 
 	<div class="form-group">
 		<label for="value">Challenge Name<br>
 			<small class="form-text text-muted">
-				The name/identifier of the challenge to be passed to the validation engine
+				The name/identifier of the challenge to be passed to the validator service.
 			</small>
 		</label>
 		<input type="text" class="form-control" name="challengeName" placeholder="Enter challenge name" required>

@@ -1,0 +1,64 @@
+swagger: "2.0"
+info:
+  description: "This is the documentation for the SalesForce CTF Evaluator server."
+  version: "1.0.0"
+  title: "Salesforce CTF Integrated Challenge Evaluator"
+  contact:
+    email: "jkuemerle@salesforce.com"
+  license:
+    name: "BSD 3-Clause"
+    url: https://opensource.org/licenses/BSD-3-Clause
+host: example.com
+basePath: "/api"
+tags:
+- name: "Evaluation"
+  description: "Evaluates CTF Integrated Challeges"
+schemes:
+- "https"
+paths:
+  /runTest:
+    post:
+      tags:
+      - "Evaluation"
+      summary: "Executes a challenge evaluation"
+      description: ""
+      operationId: "runTest"
+      consumes:
+      - "application/json"
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "text/html"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Evaluation parameters"
+        required: true
+        schema:
+          $ref: "#/definitions/Test"
+      responses:
+        307:
+          description: "successful operation"
+definitions:
+  Test:
+    type: "object"
+    required:
+    - "eventId"
+    - "testName"
+    - "returnTo"
+    - "nonce"
+    - "sig"
+    properties:
+      eventId: 
+        type: "string"
+      testName:
+        type: "string"
+      returnTo:
+        type: "string"
+      nonce:
+        type: "string"
+      sig:
+        type: "string"
+        example: "Hex-Encode(HS256(nonce + eventId + testName + returnTo))"
+externalDocs:
+  description: "Find out more about CTF Integrated Challenge Evaluator"
+  url: "https://github.com/salesforce/integrated_challenge"

@@ -1,8 +1,21 @@
-#from __future__ import division  # Use floating point for math calculations
+# Copyright (c) 2020, salesforce.com, inc.
+# All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause
+# For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+from __future__ import division  # Use floating point for math calculations
 from CTFd.plugins.challenges import BaseChallenge, CHALLENGE_CLASSES
 from CTFd.plugins import register_plugin_assets_directory
 from CTFd.plugins.flags import get_flag_class
-from CTFd.models import db, Solves, Fails, Flags, Challenges, ChallengeFiles, Tags, Hints
+from CTFd.models import (
+    db,
+    Solves,
+    Fails,
+    Flags,
+    Challenges,
+    ChallengeFiles,
+    Tags,
+    Hints,
+)
 from CTFd.utils.user import get_ip
 from CTFd.utils.uploads import delete_file
 from CTFd.utils.modes import get_model
@@ -26,20 +39,22 @@ import uuid
 class IntegratedChallengeClass(BaseChallenge):
     id = "integrated"  # Unique identifier used to register challenges
     name = "integrated"  # Name of a challenge type
-    templates = {  # Handlebars templates used for each aspect of challenge editing & viewing
-        'create': '/plugins/integrated_challenges/assets/create.html',
-        'update': '/plugins/integrated_challenges/assets/update.html',
-        'view': '/plugins/integrated_challenges/assets/view.html',
+    templates = {  # Templates used for each aspect of challenge editing & viewing
+        "create": "/plugins/integrated_challenges/assets/create.html",
+        "update": "/plugins/integrated_challenges/assets/update.html",
+        "view": "/plugins/integrated_challenges/assets/view.html",
     }
     scripts = {  # Scripts that are loaded when a template is loaded
-        'create': '/plugins/integrated_challenges/assets/create.js',
-        'update': '/plugins/integrated_challenges/assets/update.js',
-        'view': '/plugins/integrated_challenges/assets/view.js',
+        "create": "/plugins/integrated_challenges/assets/create.js",
+        "update": "/plugins/integrated_challenges/assets/update.js",
+        "view": "/plugins/integrated_challenges/assets/view.js",
     }
     # Route at which files are accessible. This must be registered using register_plugin_assets_directory()
-    route = '/plugins/integrated_challenges/assets/'
+    route = "/plugins/integrated_challenges/assets/"
     # Blueprint used to access the static_folder directory.
-    blueprint = Blueprint('integrated_challenges', __name__, template_folder='templates', static_folder='assets')
+    blueprint = Blueprint(
+        "integrated", __name__, template_folder="templates", static_folder="assets"
+    )
 
     @staticmethod
     def create(request):
@@ -66,18 +81,13 @@ class IntegratedChallengeClass(BaseChallenge):
         :return: Challenge object, data dictionary to be returned to the user
         """
         challenge = IntegratedChallenge.query.filter_by(id=challenge.id).first()
-        #returnTo = request.url_root or "none"
         returnTo = str.format("{0}{1}**result**#{2}",request.url_root, url_for('challenges.listing'), challenge.name).replace("//","/")
-        nonces= uuid.uuid4().hex #str(int(time() * 1000))
+        nonces= uuid.uuid4().hex
         eventId = environ.get('EVENT_ID')
         messages = nonces+eventId+challenge.challengeName+returnTo
-        sig = hmac.new(str(environ.get('CTF_KEY')), msg=messages,digestmod=hashlib.sha256).hexdigest()
-        clientId = environ.get("CTF_CLIENTID")
-        clientSecret = environ.get("CTF_CLIENTSECRET")
+        sig = hmac.new(str(environ.get('CTF_KEY')).encode('utf-8'), msg=messages.encode('utf-8'),digestmod=hashlib.sha256).hexdigest()
         validatorURL=str(environ.get('VALIDATOR_URL'))
         testResult = request.args.get('testResult')
-        print(str.format("testResult: {0}",testResult)) 
-        print(str.format("URL: {0}", request.url))
         success = False
         flag = ""
         if not testResult:
@@ -100,8 +110,6 @@ class IntegratedChallengeClass(BaseChallenge):
             'returnTo' : returnTo,
             'eventId' : eventId,
             'sig' : sig,
-            'clientId' : clientId,
-            'clientSecret' : clientSecret,
             'validatorURL' : validatorURL,
             'nonce' : nonces,
             'testResult' : testResult,
@@ -127,7 +135,6 @@ class IntegratedChallengeClass(BaseChallenge):
         :return:
         """
         data = request.form or request.get_json()
-
         for attr, value in data.items():
             setattr(challenge, attr, value)
 
@@ -167,12 +174,12 @@ class IntegratedChallengeClass(BaseChallenge):
         :return: (boolean, string)
         """
         data = request.form or request.get_json()
-        submission = data['submission'].strip()
+        submission = data["submission"].strip()
         flags = Flags.query.filter_by(challenge_id=challenge.id).all()
         for flag in flags:
             if get_flag_class(flag.type).compare(flag, submission):
-                return True, 'Correct'
-        return False, 'Incorrect'
+                return True, "Correct"
+        return False, "Incorrect"
 
     @staticmethod
     def solve(user, team, challenge, request):
@@ -209,34 +216,51 @@ class IntegratedChallengeClass(BaseChallenge):
         This method is used to insert Fails into the database in order to mark an answer incorrect.
 
         :param team: The Team object from the database
-        :param challenge: The Challenge object from the database
+        :param chal: The Challenge object from the database
         :param request: The request the user submitted
         :return:
         """
         data = request.form or request.get_json()
-        submission = data['submission'].strip()
+        submission = data["submission"].strip()
         wrong = Fails(
             user_id=user.id,
             team_id=team.id if team else None,
             challenge_id=challenge.id,
             ip=get_ip(request),
-            provided=submission
+            provided=submission,
         )
         db.session.add(wrong)
         db.session.commit()
         db.session.close()
 
 
+def get_chal_class(class_id):
+    """
+    Utility function used to get the corresponding class from a class ID.
+
+    :param class_id: String representing the class ID
+    :return: Challenge class
+    """
+    cls = CHALLENGE_CLASSES.get(class_id)
+    if cls is None:
+        raise KeyError
+    return cls
+
+
 class IntegratedChallenge(Challenges):
-    __mapper_args__ = {'polymorphic_identity': 'integrated'}
-    id = db.Column(None, db.ForeignKey('challenges.id'), primary_key=True)
+    __mapper_args__ = {"polymorphic_identity": "integrated"}
+    id = db.Column(None, db.ForeignKey("challenges.id"), primary_key=True)
     challengeName = db.Column(db.String(200))
 
     def __init__(self, *args, **kwargs):
         super(IntegratedChallenge, self).__init__(**kwargs)
+        self.initial = kwargs["value"]
+
 
 def load(app):
     # upgrade()
     app.db.create_all()
-    CHALLENGE_CLASSES['integrated'] = IntegratedChallengeClass
-    register_plugin_assets_directory(app, base_path='/plugins/integrated_challenges/assets/')
+    CHALLENGE_CLASSES["integrated"] = IntegratedChallengeClass
+    register_plugin_assets_directory(
+        app, base_path="/plugins/integrated_challenges/assets/"
+    )
