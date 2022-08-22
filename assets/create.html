@@ -1,83 +1,17 @@
-<form method="POST" action="{{ script_root }}/admin/challenges/new" enctype="multipart/form-data">
-	<div class="form-group">
-		<label>
-			Name:<br>
-			<small class="form-text text-muted">
-				The name of your challenge
-			</small>
-		</label>
-		<input type="text" class="form-control" name="name" placeholder="Enter challenge name">
-	</div>
+{% extends "admin/challenges/create.html" %} {% block header %}
+<div class="alert alert-secondary" role="alert">
+    Integrated challenges POST to an external evaluator endpoint and receive back structured URL parameters with sussess/fail data.
+</div>
+{% endblock %} {% block value %}
 
-	<div class="form-group">
-		<label>
-			Category:<br>
-			<small class="form-text text-muted">
-				The category of your challenge
-			</small>
-		</label>
-		<input type="text" class="form-control" name="category" placeholder="Enter challenge category">
-	</div>
+<div class="form-group">
+    <label for="value">Challenge Idenitfier<br>
+		<small class="form-text text-muted">
+			The identifier of the challenge to be passed to the validator service.
+		</small>
+	</label>
+    <input type="text" class="form-control" name="challengeName" placeholder="Enter challenge name" required>
+</div>
 
-	<ul class="nav nav-tabs" role="tablist" id="new-desc-edit">
-		<li class="nav-item">
-			<a class="nav-link active" href="#new-desc-write" aria-controls="home" role="tab"
-			   data-toggle="tab" tabindex="-1">Write</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="#new-desc-preview" aria-controls="home" role="tab" data-toggle="tab" tabindex="-1">Preview</a>
-		</li>
-	</ul>
-
-	<div class="tab-content">
-		<div role="tabpanel" class="tab-pane active" id="new-desc-write">
-			<div class="form-group">
-				<label>
-					Message:<br>
-					<small class="form-text text-muted">
-						Use this to give a brief introduction to your challenge.
-					</small>
-				</label>
-				<textarea id="new-desc-editor" class="form-control" name="description" rows="10"></textarea>
-			</div>
-		</div>
-		<div role="tabpanel" class="tab-pane content" id="new-desc-preview" style="height:234px; overflow-y: scroll;">
-		</div>
-	</div>
-
-	<div class="form-group">
-		<label>
-			Value:<br>
-			<small class="form-text text-muted">
-				This is how many points are rewarded for solving this challenge.
-			</small>
-		</label>
-		<input type="number" class="form-control" name="value" placeholder="Enter value" required>
-	</div>
-
-	<div class="form-group">
-		<label for="value">Challenge Name<br>
-			<small class="form-text text-muted">
-				The name/identifier of the challenge to be passed to the validator service.
-			</small>
-		</label>
-		<input type="text" class="form-control" name="challengeName" placeholder="Enter challenge name" required>
-	</div>
-
-	<div class="form-group">
-		<label>
-			State<br>
-			<small class="form-text text-muted">Changes the state of the challenge (e.g. visible, hidden)</small>
-		</label>
-
-		<select class="form-control" name="state">
-			<option value="visible" {% if challenge.state == "visible" %}selected{% endif %}>Visible</option>
-			<option value="hidden" {% if challenge.state == "hidden" %}selected{% endif %}>Hidden</option>
-		</select>
-	</div>
-	<input type="hidden" value="integrated" name="type" id="chaltype">
-
-	<div class="form-group">
-		<button class="btn btn-primary float-right create-challenge-submit" type="submit">Create</button>
-	</div>
-</form>
+{% endblock %} {% block type %}
+<input type="hidden" value="integrated" name="type" id="chaltype"> {% endblock %}

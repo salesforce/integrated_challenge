@@ -5,7 +5,7 @@ Salesforce integrated challenge base. This is a two phase challenge that posts a
 
 # Installation
 
-**REQUIRES: CTFd >= v2.3.0**
+**REQUIRES: CTFd >= v3.5.0**
 
 1. Clone this repository to `CTFd/plugins`. It is important that the folder is
 named `integrated_challenges` so CTFd can serve the files in the `assets`
