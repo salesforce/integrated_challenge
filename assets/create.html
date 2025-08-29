@@ -1,11 +1,13 @@
-{% extends "admin/challenges/create.html" %} {% block header %}
+{% extends "admin/challenges/create.html" %} 
+{% block header %}
 <div class="alert alert-secondary" role="alert">
     Integrated challenges POST to an external evaluator endpoint and receive back structured URL parameters with sussess/fail data.
 </div>
-{% endblock %} {% block value %}
+{% endblock %} 
 
+{% block attribution %}
 <div class="form-group">
-    <label for="value">Challenge Idenitfier<br>
+    <label for="challengeName">Challenge Identifier<br>
 		<small class="form-text text-muted">
 			The identifier of the challenge to be passed to the validator service.
 		</small>
@@ -13,5 +15,8 @@
     <input type="text" class="form-control" name="challengeName" placeholder="Enter challenge name" required>
 </div>
 
-{% endblock %} {% block type %}
-<input type="hidden" value="integrated" name="type" id="chaltype"> {% endblock %}
+{% endblock %} 
+
+{% block type %}
+<input type="hidden" value="integrated" name="type" id="chaltype"> 
+{% endblock %}

@@ -58,6 +58,23 @@ class IntegratedChallengeClass(BaseChallenge):
 
 
     @classmethod
+    def create(cls, request):
+        """
+        This method is used to process the challenge creation request.
+
+        :param request:
+        :return:
+        """
+        data = request.form or request.get_json()
+
+        challenge = IntegratedChallenge(**data)
+
+        db.session.add(challenge)
+        db.session.commit()
+
+        return challenge
+
+    @classmethod
     def read(cls, challenge):
         """
         This method is in used to access the data of a challenge in a format processable by the front end.
